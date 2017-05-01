@@ -25,10 +25,9 @@ Fotick
 
 Состав команды:
 --
-1. Иван Харлампов - Product manager;
-2. Александр Курчев - Designer;
-3. Евгений Степанюк - Full stack dev;
-4. Александр Калевич - Android dev.
+1. Иван Харлампов - Product manager, Designer;
+2. Евгений Степанюк - Full stack dev;
+3. Александр Калевич - Android dev.
 
 Контактные данные представителя команды:
 --
