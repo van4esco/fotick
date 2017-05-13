@@ -7,6 +7,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Fotick.Api.BLL.Extensions;
 using Serilog.Extensions.Logging.File;
+using Fotick.Api.BLL.Managers;
+using Fotick.Api.BLL.Contracts;
 namespace Fotick.Api.Web
 {
     public class Startup
@@ -36,6 +38,7 @@ namespace Fotick.Api.Web
             });
             services.AddSingleton<IConfiguration>(Configuration);
             services.AddRepositories();
+            services.AddTransient<ITagsManager, TagsManager>();
             services.AddMvc();
         }
 

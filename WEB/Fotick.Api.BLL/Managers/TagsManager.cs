@@ -9,9 +9,10 @@ using Fotick.Api.BLL.Models;
 using System.Threading.Tasks;
 using Fotick.Api.DAL.Entities;
 using Newtonsoft.Json;
+using Fotick.Api.BLL.Contacts;
 namespace Fotick.Api.BLL.Managers
 {
-    public class TagsManager
+    public class TagsManager: ITagsManager
     {
         private readonly IConfiguration _configuration;
         private readonly IImageRepository _imageRepository;
@@ -37,9 +38,9 @@ namespace Fotick.Api.BLL.Managers
                 new KeyValuePair<string,string>("grant_type",_configuration["Clarifai:grant_type"]),
             });
             var msg = await _client.PostAsync(_configuration["Clarifai:token_url"], content);
-            _accessToken = msg.ToDictionary()["access_token"];
+            var result = await msg.Content.ReadAsStringAsync();
+            _accessToken = result.ToDictionary()["access_token"];
             _client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _accessToken);
-            _client.PostAsync("", new StringContent(JsonConvert.SerializeObject(), Encoding.UTF8, "application/json"));
         }
 
         public async Task<IEnumerable<Tag>> GetTags(string url){
@@ -48,16 +49,16 @@ namespace Fotick.Api.BLL.Managers
                 Inputs = new List<Input>(){
                     new Input{
                         Data = new Data{
-                            Image = new Image{
+                            Image = new Models.Image{
                                 Url = url
                             }
                         }
                     }
                 }
             });
-            var url = _configuration["Clarifai:url"];
+            var curl = _configuration["Clarifai:url"];
             var model = _configuration["Clarifai:model"];
-            url.Replace("{0}", model);
+            curl.Replace("{0}", model);
             var msg = await _client.PostAsync(model, new StringContent(obj, Encoding.UTF8, "application/json"));
             var json = await msg.Content.ReadAsStringAsync();
             var result = JsonConvert.DeserializeObject<dynamic>(json).outputs[0].data.concepts;
