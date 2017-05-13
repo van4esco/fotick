@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Fotick.Api.DAL.Repositories;
 using Fotick.Api.DAL.Entities;
+using Microsoft.Extensions.Logging;
 
 namespace Fotick.Api.Web.Controllers
 {
@@ -13,13 +14,14 @@ namespace Fotick.Api.Web.Controllers
     {
         private readonly IUserRepository _userRepository;
         private readonly IImageRepository _imagesRepository;
+        private readonly ILogger<ImagesController> _logger;
 
-        public ImagesController(IUserRepository userRepository, IImageRepository imagesRepository)
+        public ImagesController(IUserRepository userRepository, IImageRepository imagesRepository, ILogger<ImagesController> logger)
         {
             _userRepository = userRepository;
             _imagesRepository = imagesRepository;
+            _logger = logger;
         }
-
 
         [HttpPost("{userName}")]
         public async Task<IActionResult> Load([FromRoute]string userName,IEnumerable<string> images)
