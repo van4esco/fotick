@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using Fotick.Api.DAL.Repositories;
 using Fotick.Api.DAL.Entities;
 using Microsoft.Extensions.Logging;
+using Fotick.Api.BLL.Managers;
+using Fotick.Api.BLL.Contracts;
 
 namespace Fotick.Api.Web.Controllers
 {
@@ -15,12 +17,14 @@ namespace Fotick.Api.Web.Controllers
         private readonly IUserRepository _userRepository;
         private readonly IImageRepository _imagesRepository;
         private readonly ILogger<ImagesController> _logger;
+        private readonly ITagsManager _tagsManager;
 
-        public ImagesController(IUserRepository userRepository, IImageRepository imagesRepository, ILogger<ImagesController> logger)
+        public ImagesController(IUserRepository userRepository, IImageRepository imagesRepository, ILogger<ImagesController> logger, ITagsManager tagsManager)
         {
             _userRepository = userRepository;
             _imagesRepository = imagesRepository;
             _logger = logger;
+            _tagsManager = tagsManager;
         }
 
         [HttpPost("{userName}")]
@@ -72,10 +76,16 @@ namespace Fotick.Api.Web.Controllers
                     image.IsForSale = true;
                     _imagesRepository.Update(image);
                 }
-                //TODO add tags generation
-                //Extract to service
+                var tags = _tagsManager.GetTags(item);
+                _imagesRepository.AddTags(image.Id, tags);
             }
             return Ok();
+        }
+
+        [HttpGet]
+        public IActionResult GetTags(string url){
+            var image = _imagesRepository.FindByUrl(url);
+            return Json(_imagesRepository.GetImageTags(image.Id));
         }
 
     }

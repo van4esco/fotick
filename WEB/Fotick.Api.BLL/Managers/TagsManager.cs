@@ -9,7 +9,7 @@ using Fotick.Api.BLL.Models;
 using System.Threading.Tasks;
 using Fotick.Api.DAL.Entities;
 using Newtonsoft.Json;
-using Fotick.Api.BLL.Contacts;
+using Fotick.Api.BLL.Contracts;
 namespace Fotick.Api.BLL.Managers
 {
     public class TagsManager: ITagsManager

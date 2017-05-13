@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Fotick.Api.DAL.Repositories
@@ -91,6 +92,18 @@ namespace Fotick.Api.DAL.Repositories
             }
         }
 
+        public int AddTags(Guid id,IEnumerable<Tag> tags){
+            using (IDbConnection dbConnection = Connection)
+            {
+                dbConnection.Open();
+                var imgtags = tags.Select(p => new ImageTag { 
+                    ImageId = id,
+                    TagId = p.Id
+                });
+                return dbConnection.Execute($"INSERT INTO dbo.ImageTags (id,image_id,tag_id,added_date) VALUES(@Id,@ImageId,@TagId,@AddedDAte)", imgtags);
+            }
+        }
+
         public Image FindByUrl(string url)
         {
             using (IDbConnection dbConnection = Connection)
@@ -109,5 +122,6 @@ namespace Fotick.Api.DAL.Repositories
         IEnumerable<Tag> GetImageTags(Guid id);
         int AddTag(Guid id, string text);
         Image FindByUrl(string url);
+        int AddTags(Guid id, IEnumerable<Tag> tags)
     }
 }
