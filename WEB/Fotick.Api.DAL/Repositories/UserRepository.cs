@@ -59,10 +59,22 @@ namespace Fotick.Api.DAL.Repositories
             }
         }
 
+        public Task<User> FindByUserName(string userName)
+        {
+            using (IDbConnection dbConnection = Connection)
+            {
+                dbConnection.Open();
+                return dbConnection.QueryFirstOrDefaultAsync<T>($"SELECT * FROM {TableName} WHERE user_name = @UserName", new
+                {
+                    UserName = userName
+                });
+            }
+        }
     }
 
     public interface IUserRepository:IGenericRepository<User>
     {
         Task<IEnumerable<Image>> GetUserImages(Guid id);
+        Task<User> FindByUserName(string userName);
     }
 }
