@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Fotick.Api.BLL.Extensions;
+using Serilog.Extensions.Logging.File;
 namespace Fotick.Api.Web
 {
     public class Startup
@@ -45,6 +44,7 @@ namespace Fotick.Api.Web
         {
             app.UseCors("CorsPolicy");
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
+            loggerFactory.AddFile($"Logs/photick-{DateTime.UtcNow.Date}.txt");
             loggerFactory.AddDebug();
 
             app.UseMvc();

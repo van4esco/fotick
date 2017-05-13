@@ -250,7 +250,4 @@ paket-files/
 # JetBrains Rider
 .idea/
 *.sln.iml
-Qui.Help.WEB/Content/Images
-Qui.Help.WEB/Content/Image
-Qui.Help.WEB/App_Data/googleCredentials.json
-Qui.Help.WEB/Logs/*
+Fotick.Api.WEB/Logs/*
