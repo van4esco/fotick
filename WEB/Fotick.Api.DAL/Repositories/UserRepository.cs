@@ -1,30 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using Dapper;
 using Fotick.Api.DAL.Entities;
 using System.Data;
-using System.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 namespace Fotick.Api.DAL.Repositories
 {
-    public class UserRepository : IUserRepository
+    public class UserRepository :GenerciRpository<User>, IUserRepository
     {
-        private string _connectionString;
         private const string _tableName = "dbo.users";
-        internal IDbConnection Connection
+
+        public override string TableName { get => "dbo.Users"; }
+
+        public UserRepository(IConfiguration configuration):base(configuration)
         {
-            get
-            {
-                return new SqlConnection(_connectionString);
-            }
         }
-        public UserRepository(IConfiguration configuration)
-        {
-            _connectionString = configuration.GetConnectionString("DefaultConnection");
-        }
-        public Task<int> Add(User entity)
+        public override Task<int> Add(User entity)
         {
             using (IDbConnection dbConnection = Connection)
             {
@@ -40,49 +32,7 @@ namespace Fotick.Api.DAL.Repositories
             }
         }
 
-        public Task<int> Delete(Guid id)
-        {
-            using (IDbConnection dbConnection = Connection)
-            {
-                dbConnection.Open();
-                return dbConnection.ExecuteAsync($"DELET FROM {_tableName}  WHERE id = @Id",
-                            new
-                            {
-                                Id = id
-                            });
-            }
-        }
-
-        public Task<User> FindById(Guid id)
-        {
-            using (IDbConnection dbConnection = Connection)
-            {
-                dbConnection.Open();
-                return dbConnection.QueryFirstOrDefaultAsync<User>($"SELECT * FROM {_tableName} WHERE id = @Id",new { 
-                    Id = id
-                });
-            }
-        }
-
-        public Task<User> FirstOrDefault()
-        {
-            using (IDbConnection dbConnection = Connection)
-            {
-                dbConnection.Open();
-                return dbConnection.QueryFirstOrDefaultAsync<User>($"SELECT * FROM {_tableName} ORDER BY added_date LIMIT 1");
-            }
-        }
-
-        public Task<IEnumerable<User>> GetAll()
-        {
-            using (IDbConnection dbConnection = Connection)
-            {
-                dbConnection.Open();
-                return dbConnection.QueryAsync<User>($"SELECT * FROM {_tableName} ORDER BY added_date ");
-            }
-        }
-
-        public Task<int> Update(User entity)
+        public override Task<int> Update(User entity)
         {
             using (IDbConnection dbConnection = Connection)
             {
@@ -108,6 +58,7 @@ namespace Fotick.Api.DAL.Repositories
                 });
             }
         }
+
     }
 
     public interface IUserRepository:IGenericRepository<User>
