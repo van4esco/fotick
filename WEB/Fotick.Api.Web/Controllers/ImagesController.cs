@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+
 using Microsoft.AspNetCore.Mvc;
 using Fotick.Api.DAL.Repositories;
 using Fotick.Api.DAL.Entities;
@@ -24,11 +24,11 @@ namespace Fotick.Api.Web.Controllers
         }
 
         [HttpPost("{userName}")]
-        public async Task<IActionResult> Load([FromRoute]string userName,IEnumerable<string> images)
+        public IActionResult Load([FromRoute]string userName,[FromBody]string[] images)
         {
             try
             {
-                var user = await _userRepository.FindByUserName(userName);
+                var user = _userRepository.FindByUserName(userName);
                 if (user == null)
                     return BadRequest();
                 foreach (var item in images)
@@ -39,7 +39,7 @@ namespace Fotick.Api.Web.Controllers
                         UserId = user.Id
                     };
                     //Extract to service
-                    await _imagesRepository.Add(image);
+                     _imagesRepository.Add(image);
                 }
                 return Ok();
             }
@@ -50,14 +50,14 @@ namespace Fotick.Api.Web.Controllers
         }
 
         [HttpPost("{userName}/sell")]
-        public async Task<IActionResult> Sell(string userName, [FromBody]IEnumerable<string> images)
+        public IActionResult Sell(string userName, [FromBody]IEnumerable<string> images)
         {
-            var user = await _userRepository.FindByUserName(userName);
+            var user = _userRepository.FindByUserName(userName);
             if (user == null)
                 return BadRequest();
             foreach (var item in images)
             {
-                var image = await _imagesRepository.FindByUrl(item);
+                var image = _imagesRepository.FindByUrl(item);
                 if(image == null)
                 {
                     image = new Image()
@@ -66,15 +66,14 @@ namespace Fotick.Api.Web.Controllers
                         UserId = user.Id,
                         IsForSale = true
                     };
-                    await _imagesRepository.Add(image);
+                    _imagesRepository.Add(image);
                 }
                 else{
                     image.IsForSale = true;
-                    await _imagesRepository.Update(image);
+                    _imagesRepository.Update(image);
                 }
                 //TODO add tags generation
                 //Extract to service
-                return Ok();
             }
             return Ok();
         }

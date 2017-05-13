@@ -17,12 +17,12 @@ namespace Fotick.Api.DAL.Repositories
 
         public override string TableName => "dbo.Tags";
 
-        public override Task<int> Add(Tag entity)
+        public override int Add(Tag entity)
         {
             using (IDbConnection dbConnection = Connection)
             {
                 dbConnection.Open();
-                return dbConnection.ExecuteAsync($"INSERT INTO {TableName} (id,text,added_date) VALUES(@Id,@Text,@Date)",
+                return dbConnection.Execute($"INSERT INTO {TableName} (id,text,added_date) VALUES(@Id,@Text,@Date)",
                         new
                         {
                             Id = entity.Id,
@@ -32,24 +32,24 @@ namespace Fotick.Api.DAL.Repositories
             }
         }
 
-        public Task<Tag> GetByText(string text)
+        public Tag GetByText(string text)
         {
             using (IDbConnection dbConnection = Connection)
             {
                 dbConnection.Open();
-                return dbConnection.QueryFirstOrDefaultAsync<Tag>($"SELECT * FROM {TableName} WHERE text = @Text", new
+                return dbConnection.QueryFirstOrDefault<Tag>($"SELECT * FROM {TableName} WHERE text = @Text", new
                 {
                     Id = text
                 });
             }
         }
 
-        public override Task<int> Update(Tag entity)
+        public override int Update(Tag entity)
         {
             using (IDbConnection dbConnection = Connection)
             {
                 dbConnection.Open();
-                return dbConnection.ExecuteAsync($"UPDATE {TableName} SET text = @Text WHERE id = @Id",
+                return dbConnection.Execute($"UPDATE {TableName} SET text = @Text WHERE id = @Id",
                         new
                         {
                             Url = entity.Text,
@@ -61,6 +61,6 @@ namespace Fotick.Api.DAL.Repositories
 
     public interface ITagRepository:IGenericRepository<Tag>
     {
-        Task<Tag> GetByText(string text);
+        Tag GetByText(string text);
     }
 }

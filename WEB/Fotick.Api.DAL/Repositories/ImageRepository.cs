@@ -21,12 +21,12 @@ namespace Fotick.Api.DAL.Repositories
             _tagRepository = tagRepository;
         }
 
-        public override Task<int> Add(Image entity)
+        public override int Add(Image entity)
         {
             using (IDbConnection dbConnection = Connection)
             {
                 dbConnection.Open();
-                return dbConnection.ExecuteAsync($"INSERT INTO {TableName} (id,url,user_id,aesthetics_status,aesthetics_persent,added_date,is_for_sale) VALUES(@Id,@Url,@AestheticsStatus,@AestheticsPersent,@Date,@IsForSale)",
+                return dbConnection.Execute($"INSERT INTO {TableName} (id,url,user_id,aesthetics_status,aesthetics_persent,added_date,is_for_sale) VALUES(@Id,@Url,@UserId,@AestheticsStatus,@AestheticsPersent,@Date,@IsForSale)",
                         new
                         {
                             Id = entity.Id,
@@ -34,17 +34,18 @@ namespace Fotick.Api.DAL.Repositories
                             AestheticsStatus = entity.AestheticsStatus,
                             AestheticsPersent = entity.AestheticsPersent,
                             Date = entity.AddedDate,
-                            IsForSale = entity.IsForSale
+                            IsForSale = entity.IsForSale,
+                            UserId = entity.UserId
                         });
             }
         }
 
-        public Task<IEnumerable<Tag>> GetImageTags(Guid id)
+        public IEnumerable<Tag> GetImageTags(Guid id)
         {
             using (IDbConnection dbConnection = Connection)
             {
                 dbConnection.Open();
-                return dbConnection.QueryAsync<Tag>($"SELECT * FROM dbo.Tags as t JOIN dbo.ImageTags as i ON i.tag_id = t.id WHERE i.image_id = @id", new
+                return dbConnection.Query<Tag>($"SELECT * FROM dbo.Tags as t JOIN dbo.ImageTags as i ON i.tag_id = t.id WHERE i.image_id = @id", new
                 {
                     Id = id
                 });
@@ -52,12 +53,12 @@ namespace Fotick.Api.DAL.Repositories
         }
 
 
-        public override Task<int> Update(Image entity)
+        public override int Update(Image entity)
         {
             using (IDbConnection dbConnection = Connection)
             {
                 dbConnection.Open();
-                return dbConnection.ExecuteAsync($"UPDATE {TableName} SET url = @Url,is_for_sale = @IsForSale, aesthetics_status = @AestheticsStatus,aesthetics_persent = @AestheticsPersent WHERE id = @Id",
+                return dbConnection.Execute($"UPDATE {TableName} SET url = @Url,is_for_sale = @IsForSale, aesthetics_status = @AestheticsStatus,aesthetics_persent = @AestheticsPersent WHERE id = @Id",
                         new
                         {
                             Url = entity.Url,
@@ -69,17 +70,17 @@ namespace Fotick.Api.DAL.Repositories
             }
         }
 
-        public async Task<int> AddTag(Guid id, string text)
+        public  int AddTag(Guid id, string text)
         {
             using (IDbConnection dbConnection = Connection)
             {
                 dbConnection.Open();
-                var tag = await _tagRepository.GetByText(text); 
+                var tag =  _tagRepository.GetByText(text); 
                 if(tag==null){
                     tag = new Tag() { Text = text };
-                    await _tagRepository.Add(tag);
+                     _tagRepository.Add(tag);
                 }
-                return await dbConnection.ExecuteAsync($"INSERT INTO dbo.ImageTags (id,image_id,tag_id,added_date) VALUES(@Id,@ImageId,@TagId,@Date)",
+                return  dbConnection.Execute($"INSERT INTO dbo.ImageTags (id,image_id,tag_id,added_date) VALUES(@Id,@ImageId,@TagId,@Date)",
                         new
                         {
                             Id = tag.Id,
@@ -90,12 +91,12 @@ namespace Fotick.Api.DAL.Repositories
             }
         }
 
-        public Task<Image> FindByUrl(string url)
+        public Image FindByUrl(string url)
         {
             using (IDbConnection dbConnection = Connection)
             {
                 dbConnection.Open();
-                return dbConnection.QueryFirstOrDefaultAsync<Image>($"SELECT * FROM {TableName} WHERE urk = @Url", new
+                return dbConnection.QueryFirstOrDefault<Image>($"SELECT * FROM {TableName} WHERE url = @Url", new
                 {
                     Url = url
                 });
@@ -105,8 +106,8 @@ namespace Fotick.Api.DAL.Repositories
 
     public interface IImageRepository:IGenericRepository<Image>
     {
-        Task<IEnumerable<Tag>> GetImageTags(Guid id);
-        Task<int> AddTag(Guid id, string text);
-        Task<Image> FindByUrl(string url);
+        IEnumerable<Tag> GetImageTags(Guid id);
+        int AddTag(Guid id, string text);
+        Image FindByUrl(string url);
     }
 }

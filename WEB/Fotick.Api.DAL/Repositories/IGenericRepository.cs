@@ -5,19 +5,17 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Fotick.Api.DAL.Repositories
 {
     public interface IGenericRepository<T> where T:BaseEntity
     {
-        Task<IEnumerable<T>> GetAll();
-        Task<T> FirstOrDefault();
-        Task<T> FindById(Guid id);
-        Task<int> Add(T entity);
-        Task<int> Delete(Guid id);
-        Task<int> Update(T entity);
+        IEnumerable<T> GetAll();
+        T FirstOrDefault();
+        T FindById(Guid id);
+        int Add(T entity);
+        int Delete(Guid id);
+        int Update(T entity);
     }
 
     public abstract class GenerciRpository<T>:IGenericRepository<T> where T:BaseEntity
@@ -37,44 +35,44 @@ namespace Fotick.Api.DAL.Repositories
             _connectionString = configuration.GetConnectionString("DefaultConnection");
         }
 
-        public Task<IEnumerable<T>> GetAll()
+        public IEnumerable<T> GetAll()
         {
             using (IDbConnection dbConnection = Connection)
             {
                 dbConnection.Open();
-                return dbConnection.QueryAsync<T>($"SELECT * FROM {TableName} ORDER BY added_date ");
+                return dbConnection.Query<T>($"SELECT * FROM {TableName} ORDER BY added_date ");
             }
         }
 
-        public Task<T> FirstOrDefault()
+        public  T FirstOrDefault()
         {
             using (IDbConnection dbConnection = Connection)
             {
                 dbConnection.Open();
-                return dbConnection.QueryFirstOrDefaultAsync<T>($"SELECT * FROM {TableName} ORDER BY added_date LIMIT 1");
+                return  dbConnection.QueryFirstOrDefault<T>($"SELECT * FROM {TableName} ORDER BY added_date LIMIT 1");
             }
         }
 
-        public Task<T> FindById(Guid id)
+        public T FindById(Guid id)
         {
             using (IDbConnection dbConnection = Connection)
             {
                 dbConnection.Open();
-                return dbConnection.QueryFirstOrDefaultAsync<T>($"SELECT * FROM {TableName} WHERE id = @Id", new
+                return dbConnection.QueryFirstOrDefault<T>($"SELECT * FROM {TableName} WHERE id = @Id", new
                 {
                     Id = id
                 });
             }
         }
 
-        public abstract Task<int> Add(T entity);
+        public abstract int Add(T entity);
 
-        public Task<int> Delete(Guid id)
+        public int Delete(Guid id)
         {
             using (IDbConnection dbConnection = Connection)
             {
                 dbConnection.Open();
-                return dbConnection.ExecuteAsync($"DELET FROM {TableName}  WHERE id = @Id",
+                return dbConnection.Execute($"DELET FROM {TableName}  WHERE id = @Id",
                             new
                             {
                                 Id = id
@@ -82,6 +80,6 @@ namespace Fotick.Api.DAL.Repositories
             }
         }
 
-        public abstract Task<int> Update(T entity);
+        public abstract int Update(T entity);
     }
 }

@@ -16,12 +16,12 @@ namespace Fotick.Api.DAL.Repositories
         public UserRepository(IConfiguration configuration):base(configuration)
         {
         }
-        public override Task<int> Add(User entity)
+        public override int Add(User entity)
         {
             using (IDbConnection dbConnection = Connection)
             {
                 dbConnection.Open();
-                return dbConnection.ExecuteAsync($"INSERT INTO {_tableName} (id,login,user_name,added_date) VALUES(@Id,@Login,@Name,@Date)",
+                return dbConnection.Execute($"INSERT INTO {_tableName} (id,login,user_name,added_date) VALUES(@Id,@Login,@Name,@Date)",
                         new
                         {
                             Id = entity.Id,
@@ -32,12 +32,12 @@ namespace Fotick.Api.DAL.Repositories
             }
         }
 
-        public override Task<int> Update(User entity)
+        public override int Update(User entity)
         {
             using (IDbConnection dbConnection = Connection)
             {
                 dbConnection.Open();
-                return dbConnection.ExecuteAsync($"UPDATE {_tableName} SET name = @Name, login = @Login WHERE id = @Id",
+                return dbConnection.Execute($"UPDATE {_tableName} SET name = @Name, login = @Login WHERE id = @Id",
                         new
                         {
                             Name = entity.UserName,
@@ -47,24 +47,24 @@ namespace Fotick.Api.DAL.Repositories
             }
         }
 
-        public Task<IEnumerable<Image>> GetUserImages(Guid id)
+        public IEnumerable<Image> GetUserImages(Guid id)
         {
             using (IDbConnection dbConnection = Connection)
             {
                 dbConnection.Open();
-                return dbConnection.QueryAsync<Image>($"SELECT * FROM dbo.Images WHERE user_id = @Id ORDER BY aesthetics_persent", new
+                return dbConnection.Query<Image>($"SELECT * FROM dbo.Images WHERE user_id = @Id ORDER BY aesthetics_persent", new
                 {
                     Id = id
                 });
             }
         }
 
-        public Task<User> FindByUserName(string userName)
+        public User FindByUserName(string userName)
         {
             using (IDbConnection dbConnection = Connection)
             {
                 dbConnection.Open();
-                return dbConnection.QueryFirstOrDefaultAsync<User>($"SELECT * FROM {TableName} WHERE user_name = @UserName", new
+                return dbConnection.QueryFirstOrDefault<User>($"SELECT * FROM {TableName} WHERE user_name = @UserName", new
                 {
                     UserName = userName
                 });
@@ -74,7 +74,7 @@ namespace Fotick.Api.DAL.Repositories
 
     public interface IUserRepository:IGenericRepository<User>
     {
-        Task<IEnumerable<Image>> GetUserImages(Guid id);
-        Task<User> FindByUserName(string userName);
+        IEnumerable<Image> GetUserImages(Guid id);
+        User FindByUserName(string userName);
     }
 }

@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Threading.Tasks;
+
 using Microsoft.AspNetCore.Mvc;
 using Fotick.Api.DAL.Entities;
 using Fotick.Api.DAL.Repositories;
@@ -20,7 +20,7 @@ namespace Fotick.Api.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody]string userName)
+        public  IActionResult Post([FromBody]string userName)
         {
             try
             {
@@ -29,7 +29,7 @@ namespace Fotick.Api.Web.Controllers
                 {
                     return BadRequest();
                 }
-                var user = await _userRepository.FindByUserName(userName);
+                var user =  _userRepository.FindByUserName(userName);
                 if (user != null)
                 {
                     _logger.LogDebug($"User allready exist: {userName}");
@@ -40,7 +40,7 @@ namespace Fotick.Api.Web.Controllers
                     Login = userName,
                     UserName = userName
                 };
-                await _userRepository.Add(user);
+                 _userRepository.Add(user);
                 _logger.LogDebug($"Created user: {userName}");
                 return Ok();
             }
@@ -52,14 +52,14 @@ namespace Fotick.Api.Web.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(string id)
+        public  IActionResult Delete(string id)
         {
             try
             {
                 var guid = Guid.Empty;
                 if (!Guid.TryParse(id, out guid))
                     return BadRequest();
-                await _userRepository.Delete(guid);
+                 _userRepository.Delete(guid);
                 return Ok();
             }
             catch (Exception)
