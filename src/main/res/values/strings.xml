@@ -8,6 +8,6 @@
     <string name="action_settings">Settings</string>
 
     <string name="title_activity_splash">SplashActivity</string>
-    <string name="dummy_content_bottom">SIGN IN WITH INSTAGRAM</string>
+    <string name="dummy_content_bottom">SIGN IN </string>
     <string name="dummy_content">Fotick</string>
 </resources>

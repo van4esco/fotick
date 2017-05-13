@@ -22,7 +22,7 @@ import android.widget.TextView;
  */
 public class SplashActivity extends AppCompatActivity {
     TextView logoTextView;
-    TextView bottomLogoTextView;
+
     EditText login;
     Button button;
 
@@ -37,11 +37,11 @@ public class SplashActivity extends AppCompatActivity {
         logoTextView = (TextView)findViewById(R.id.fullscreen_content);
         logoTextView.setTypeface(myTypeface);
         Typeface myTypeface2 = Typeface.createFromAsset(getAssets(), "fonts/robotoregular.ttf");
-        bottomLogoTextView = (TextView)findViewById(R.id.fullscreenbottom_content);
-        bottomLogoTextView.setTypeface(myTypeface2);
+
+
         login = (EditText)findViewById(R.id.editText);
         button = (Button)findViewById(R.id.button);
-
+        button.setTypeface(myTypeface2);
     }
 
 
