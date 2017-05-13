@@ -26,14 +26,15 @@ namespace Fotick.Api.DAL.Repositories
             using (IDbConnection dbConnection = Connection)
             {
                 dbConnection.Open();
-                return dbConnection.ExecuteAsync($"INSERT INTO {TableName} (id,url,user_id,aesthetics_status,aesthetics_persent,added_date) VALUES(@Id,@Url,@AestheticsStatus,@AestheticsPersent,@Date)",
+                return dbConnection.ExecuteAsync($"INSERT INTO {TableName} (id,url,user_id,aesthetics_status,aesthetics_persent,added_date,is_for_sale) VALUES(@Id,@Url,@AestheticsStatus,@AestheticsPersent,@Date,@IsForSale)",
                         new
                         {
                             Id = entity.Id,
                             Url = entity.Url,
                             AestheticsStatus = entity.AestheticsStatus,
                             AestheticsPersent = entity.AestheticsPersent,
-                            Date = entity.AddedDate
+                            Date = entity.AddedDate,
+                            IsForSale = entity.IsForSale
                         });
             }
         }
@@ -56,13 +57,14 @@ namespace Fotick.Api.DAL.Repositories
             using (IDbConnection dbConnection = Connection)
             {
                 dbConnection.Open();
-                return dbConnection.ExecuteAsync($"UPDATE {TableName} SET url = @Url, aesthetics_status = @AestheticsStatus,aesthetics_persent = @AestheticsPersent WHERE id = @Id",
+                return dbConnection.ExecuteAsync($"UPDATE {TableName} SET url = @Url,is_for_sale = @IsForSale, aesthetics_status = @AestheticsStatus,aesthetics_persent = @AestheticsPersent WHERE id = @Id",
                         new
                         {
                             Url = entity.Url,
                             AestheticsStatus = entity.AestheticsStatus,
                             AestheticsPersent = entity.AestheticsPersent,
-                            Id = entity.Id
+                            Id = entity.Id,
+                            IsForSale = entity.IsForSale
                         });
             }
         }
@@ -87,11 +89,24 @@ namespace Fotick.Api.DAL.Repositories
                         });
             }
         }
+
+        public Task<Image> FindByUrl(string url)
+        {
+            using (IDbConnection dbConnection = Connection)
+            {
+                dbConnection.Open();
+                return dbConnection.QueryFirstOrDefaultAsync<Image>($"SELECT * FROM {TableName} WHERE urk = @Url", new
+                {
+                    Url = url
+                });
+            }
+        }
     }
 
     public interface IImageRepository:IGenericRepository<Image>
     {
         Task<IEnumerable<Tag>> GetImageTags(Guid id);
         Task<int> AddTag(Guid id, string text);
+        Task<Image> FindByUrl(string url);
     }
 }

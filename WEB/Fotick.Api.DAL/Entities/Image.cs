@@ -8,5 +8,6 @@ namespace Fotick.Api.DAL.Entities
         public Guid UserId { get; set; }
         public string AestheticsStatus { get; set; }
         public string AestheticsPersent { get; set; }
+        public bool IsForSale { get; set; }
     }
 }

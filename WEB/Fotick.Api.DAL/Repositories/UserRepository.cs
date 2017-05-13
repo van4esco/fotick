@@ -64,7 +64,7 @@ namespace Fotick.Api.DAL.Repositories
             using (IDbConnection dbConnection = Connection)
             {
                 dbConnection.Open();
-                return dbConnection.QueryFirstOrDefaultAsync<T>($"SELECT * FROM {TableName} WHERE user_name = @UserName", new
+                return dbConnection.QueryFirstOrDefaultAsync<User>($"SELECT * FROM {TableName} WHERE user_name = @UserName", new
                 {
                     UserName = userName
                 });
