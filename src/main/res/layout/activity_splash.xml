@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:background="@color/splash_fon"
     tools:context="com.example.fotick.SplashActivity"
-    android:onClick="onClick">
+    >
 
     <!-- The primary full-screen view. This can be replaced with whatever view
          is needed to present your content, e.g. VideoView, SurfaceView,
@@ -36,6 +36,26 @@
         android:textColor="@color/splash_font"
         android:textSize="90sp"
         android:textStyle="bold" />
+
+    <EditText
+        android:id="@+id/editText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/fullscreen_content"
+        android:layout_centerHorizontal="true"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="Name" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Button"
+        android:layout_alignBottom="@+id/editText"
+        android:layout_toRightOf="@+id/fullscreenbottom_content"
+        android:layout_toEndOf="@+id/fullscreenbottom_content"
+        android:onClick="onClick"/>
 
 
 </RelativeLayout>

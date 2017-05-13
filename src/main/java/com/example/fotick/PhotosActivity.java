@@ -1,8 +1,13 @@
 package com.example.fotick;
 
+import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -12,9 +17,29 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
+
+import com.example.fotick.POJO.Image;
+
+import java.util.List;
 
 public class PhotosActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+    private MenuItem mSearchMenuItem;
+    private SearchView mSearchView;
+    EditText mText;
+    String mAuthToken;
+    private String mQuery;
+
+    List<Image> mPictures;
+    private String mMaxId, mMinId;
+    ImageAdapter mAdapter;
+    private RecyclerView mRecyclerView;
+    List<String> urlstring;
+    List<String> standardurl;
+
+    private ProgressDialog mProgressDialog;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +65,22 @@ public class PhotosActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+
+        Intent intent = getIntent();
+        mAuthToken = intent.getStringExtra("login");
+
+        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        GridLayoutManager manager = new GridLayoutManager(this, 3);
+        mRecyclerView.setLayoutManager(manager);
+
+        showPD();
+        fetchmedia();
+
+        mAdapter = new ImageAdapter(mPictures);
+        mAdapter.notifyDataSetChanged();
+        mRecyclerView.setAdapter(mAdapter);
+
     }
 
     @Override
@@ -98,6 +139,27 @@ public class PhotosActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+    private void showPD(){
+
+        if(mProgressDialog==null){
+            mProgressDialog = new ProgressDialog(this);
+            mProgressDialog.setMessage("Loading...");
+            mProgressDialog.setCancelable(false);
+            mProgressDialog.setCanceledOnTouchOutside(false);
+            mProgressDialog.show();
+        }
+    }
+
+    private void hidePD(){
+        if(mProgressDialog!= null){
+            mProgressDialog.dismiss();
+            mProgressDialog = null;
+        }
+
+    }
+
+
 
 }
 
