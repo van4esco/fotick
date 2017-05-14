@@ -1,0 +1,34 @@
+﻿<html>
+    <head>
+        <title>Fotick - Main page</title>
+        <link href="~/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+        <link href="~/bower_components/fancybox/dist/jquery.fancybox.min.css" rel="stylesheet" />
+        <link href="~/styles/site.css" rel="stylesheet" />
+        <script src="~/bower_components/jquery/dist/jquery.min.js"></script>
+        <script src="~/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+        <script src="~/bower_components/fancybox/dist/jquery.fancybox.min.js"></script>
+        <script src="~/scripts/fancybox.init.js"></script>
+    </head>
+    <body>
+        <div class="container">
+            <div class="row">
+                <div class="gallery col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <h1 class="gallery-title">Fotick</h1>
+                </div>
+                <div align="center">
+                    <input type="search" value="" class="form-control" /><button class="btn btn-info btn-lg margin-top-10">Search  <span class="glyphicon glyphicon-search"></span></button>
+                </div>
+                <br />
+                @for (int i = 0; i < 20; i++)
+                {
+                <div class="gallery_product col-lg-4 col-md-4 col-sm-4 col-xs-6 filter hdpe">
+                    <a class=" fancybox" rel="ligthbox" href="http://fakeimg.pl/365x365/">
+                        <img src="http://fakeimg.pl/365x365/" alt="" class="img-responsive img-content">
+                    </a>
+                </div>
+                }
+            </div>
+        </div>
+
+    </body>
+</html>

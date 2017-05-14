@@ -38,13 +38,16 @@ namespace Fotick.Api.Web.Controllers
                     return BadRequest();
                 foreach (var item in images)
                 {
-                    var image = new Image()
+                    if (_imagesRepository.FindByUrl(item) == null)
                     {
-                        Url = item,
-                        UserId = user.Id
-                    };
+                        var image = new Image()
+                        {
+                            Url = item,
+                            UserId = user.Id
+                        };
+                        _imagesRepository.Add(image);
+                    }
                     //Extract to service
-                     _imagesRepository.Add(image);
                 }
                 return Ok();
             }

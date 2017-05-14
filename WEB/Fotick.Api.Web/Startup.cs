@@ -49,7 +49,7 @@ namespace Fotick.Api.Web
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddFile($"Logs/photick-{DateTime.UtcNow.Date}.txt");
             loggerFactory.AddDebug();
-
+            app.UseStaticFiles();
             app.UseMvc();
         }
     }
