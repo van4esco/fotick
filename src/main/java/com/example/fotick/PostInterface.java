@@ -17,6 +17,6 @@ public interface PostInterface {
     @POST("images/hateinsta2")
     Call<String> getArray(@Body JSONArray body);
 
-    @POST("images/hateinsta2/sale")
+    @POST("images/user/sale")
     Call<String> getArraySale(@Body JSONArray body);
 }
