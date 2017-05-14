@@ -16,12 +16,14 @@ namespace Fotick.Api.Web.Controllers
 
         public ActionResult Index(string tag)
         {
-            var db = FontickDbContext.Create();
-            if(!string.IsNullOrWhiteSpace(tag))
+            using (var db = FontickDbContext.Create())
             {
-                return View(db.Images.Where(p=>p.IsForSale && p.Tags!=null && p.Tags.Any(pp=>pp.Text.Intersect(tag).Count()>0)).Select(p=>p.Url));
+                if (!string.IsNullOrWhiteSpace(tag))
+                {
+                    return View(db.Images.Where(p => p.IsForSale && p.Tags != null && p.Tags.Any(pp => pp.Text.Intersect(tag).Count() > 0)).Select(p => p.Url));
+                }
+                return View();
             }
-            return View();
         }
 
         public FileStreamResult DownloadItem(string url)

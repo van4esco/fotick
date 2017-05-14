@@ -13,6 +13,11 @@ namespace DAL
         {
 
         }
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<Image>().HasMany(p => p.Tags).WithMany(p => p.Images).Map(p => p.MapLeftKey("image_id").MapRightKey("tags_id").ToTable("ImageTags"));
+        }
         public DbSet<User> Users { get; set; }
         public DbSet<Image> Images { get; set; }
         public DbSet<Tag> Tags { get; set; }

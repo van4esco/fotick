@@ -13,7 +13,7 @@ using DAL;
 
 namespace BLL
 {
-    public class TagsManager
+    public class TagsManager:IDisposable
     {
         private string _accessToken;
         private HttpClient _client;
@@ -33,9 +33,11 @@ namespace BLL
                 new KeyValuePair<string,string>("client_secret",ConfigurationManager.AppSettings["Clarifai:client_secret"]),
                 new KeyValuePair<string,string>("grant_type",ConfigurationManager.AppSettings["Clarifai:grant_type"]),
             });
-            var msg = await _client.PostAsync(ConfigurationManager.AppSettings["Clarifai:token_url"], content);
-            var result = await msg.Content.ReadAsStringAsync();
-            _accessToken = result.ToDictionary()["access_token"];
+            var msgT = _client.PostAsync(ConfigurationManager.AppSettings["Clarifai:token_url"], content);
+            msgT.Wait();
+            var result = msgT.Result.Content.ReadAsStringAsync();
+            result.Wait();
+            _accessToken = result.Result.ToDictionary()["access_token"];
             _client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _accessToken);
         }
 
@@ -60,22 +62,30 @@ namespace BLL
             var json = await msg.Content.ReadAsStringAsync();
             var result = JsonConvert.DeserializeObject<Model>(json);
             var list = new List<Tag>();
-            var db = FontickDbContext.Create();
-            foreach (dynamic item in result.Outputs[0].Data.Concepts)
+            using (var db = FontickDbContext.Create())
             {
-                var tag = db.Tags.FirstOrDefault(p => p.Text == item as string);
-                if (tag == null)
+                foreach (var item in result.Outputs[0].Data.Concepts)
                 {
-                    tag = new Tag
+                    var tag = db.Tags.FirstOrDefault(p => p.Text == item.Name);
+                    if (tag == null)
                     {
-                        Text = item.name
-                    };
-                    db.Tags.Add(tag);
+                        tag = new Tag
+                        {
+                            Text = item.Name
+                        };
+                        db.Tags.Add(tag);
+                    }
+                    list.Add(tag);
                 }
-                list.Add(tag);
+                db.SaveChanges();
+                return list;
             }
-            db.SaveChanges();
-            return list;
+        }
+
+        public void Dispose()
+        {
+            if (_client != null)
+                _client.Dispose();
         }
     }
 }
