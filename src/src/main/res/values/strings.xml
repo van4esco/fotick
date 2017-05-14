@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Fotick</string>
+    <string name="title_activity_photos">PhotosActivity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+
+    <string name="title_activity_splash">SplashActivity</string>
+    <string name="dummy_content_bottom">SIGN IN WITH INSTAGRAM</string>
+    <string name="dummy_content">FOTICK</string>
+</resources>
