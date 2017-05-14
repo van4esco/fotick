@@ -22,7 +22,7 @@ namespace Fotick.Api.DAL.Repositories
             using (IDbConnection dbConnection = Connection)
             {
                 dbConnection.Open();
-                return dbConnection.Execute($"INSERT INTO {TableName} (id,text,added_date) VALUES(@Id,@Text,@Date)",
+                return dbConnection.Execute($"INSERT INTO {TableName} (id,text,addedDate) VALUES(@Id,@Text,@Date)",
                         new
                         {
                             Id = entity.Id,

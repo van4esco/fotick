@@ -21,7 +21,7 @@ namespace Fotick.Api.DAL.Repositories
             using (IDbConnection dbConnection = Connection)
             {
                 dbConnection.Open();
-                return dbConnection.Execute($"INSERT INTO {_tableName} (id,login,user_name,added_date) VALUES(@Id,@Login,@Name,@Date)",
+                return dbConnection.Execute($"INSERT INTO {_tableName} (id,login,userName,addedDate) VALUES(@Id,@Login,@Name,@Date)",
                         new
                         {
                             Id = entity.Id,
@@ -52,7 +52,7 @@ namespace Fotick.Api.DAL.Repositories
             using (IDbConnection dbConnection = Connection)
             {
                 dbConnection.Open();
-                return dbConnection.Query<Image>($"SELECT * FROM dbo.Images WHERE user_id = @Id ORDER BY aesthetics_persent", new
+                return dbConnection.Query<Image>($"SELECT * FROM dbo.Images WHERE userId = @Id ORDER BY aestheticsPersent", new
                 {
                     Id = id
                 });
@@ -64,7 +64,7 @@ namespace Fotick.Api.DAL.Repositories
             using (IDbConnection dbConnection = Connection)
             {
                 dbConnection.Open();
-                return dbConnection.QueryFirstOrDefault<User>($"SELECT * FROM {TableName} WHERE user_name = @UserName", new
+                return dbConnection.QueryFirstOrDefault<User>($"SELECT * FROM {TableName} WHERE userName = @UserName", new
                 {
                     UserName = userName
                 });

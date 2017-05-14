@@ -27,7 +27,7 @@ namespace Fotick.Api.DAL.Repositories
             using (IDbConnection dbConnection = Connection)
             {
                 dbConnection.Open();
-                return dbConnection.Execute($"INSERT INTO {TableName} (id,url,user_id,aesthetics_status,aesthetics_persent,added_date,is_for_sale) VALUES(@Id,@Url,@UserId,@AestheticsStatus,@AestheticsPersent,@Date,@IsForSale)",
+                return dbConnection.Execute($"INSERT INTO {TableName} (id,url,userId,aestheticsStatus,aestheticsPersent,addedDate,isForSale) VALUES(@Id,@Url,@UserId,@AestheticsStatus,@AestheticsPersent,@Date,@IsForSale)",
                         new
                         {
                             Id = entity.Id,
@@ -59,7 +59,7 @@ namespace Fotick.Api.DAL.Repositories
             using (IDbConnection dbConnection = Connection)
             {
                 dbConnection.Open();
-                return dbConnection.Execute($"UPDATE {TableName} SET url = @Url,is_for_sale = @IsForSale, aesthetics_status = @AestheticsStatus,aesthetics_persent = @AestheticsPersent WHERE id = @Id",
+                return dbConnection.Execute($"UPDATE {TableName} SET url = @Url,isForSale = @IsForSale, aestheticsStatus = @AestheticsStatus,aestheticsPersent = @AestheticsPersent WHERE id = @Id",
                         new
                         {
                             Url = entity.Url,
@@ -115,6 +115,22 @@ namespace Fotick.Api.DAL.Repositories
                 });
             }
         }
+
+        public IEnumerable<Image> SearchByTag(string tag)
+        {
+            using (IDbConnection dbConnection = Connection)
+            {
+                dbConnection.Open();
+                return dbConnection.Query<Image>($"" +
+                $"SELECT * FROM dbo.Images as i " +
+                    $"JOIN dbo.ImageTags as it ON it.image_id = i.id " +
+                    $"JOIN dbo.Tags as t ON t.id = it.tags_id"+
+                    "WHERE t.text LIKE @Tag OR @Tag LIKE t.text", new
+                {
+                    Tag = tag
+                });
+            }
+        }
     }
 
     public interface IImageRepository:IGenericRepository<Image>
@@ -123,5 +139,6 @@ namespace Fotick.Api.DAL.Repositories
         int AddTag(Guid id, string text);
         Image FindByUrl(string url);
         int AddTags(Guid id, IEnumerable<Tag> tags);
+        IEnumerable<Image> SearchByTag(string tag);
     }
 }

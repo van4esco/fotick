@@ -40,7 +40,7 @@ namespace Fotick.Api.DAL.Repositories
             using (IDbConnection dbConnection = Connection)
             {
                 dbConnection.Open();
-                return dbConnection.Query<T>($"SELECT * FROM {TableName} ORDER BY added_date ");
+                return dbConnection.Query<T>($"SELECT * FROM {TableName} ORDER BY addedDate ");
             }
         }
 
@@ -49,7 +49,7 @@ namespace Fotick.Api.DAL.Repositories
             using (IDbConnection dbConnection = Connection)
             {
                 dbConnection.Open();
-                return  dbConnection.QueryFirstOrDefault<T>($"SELECT * FROM {TableName} ORDER BY added_date LIMIT 1");
+                return  dbConnection.QueryFirstOrDefault<T>($"SELECT * FROM {TableName} ORDER BY addedDate LIMIT 1");
             }
         }
 
