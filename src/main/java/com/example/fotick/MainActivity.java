@@ -2,6 +2,8 @@ package com.example.fotick;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
     LoginDialogImp loginDialog;
@@ -12,4 +14,6 @@ public class MainActivity extends AppCompatActivity {
         loginDialog = new LoginDialogImp(this);
         loginDialog.show();
     }
+
+
 }

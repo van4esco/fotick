@@ -6,6 +6,15 @@ package com.example.fotick.POJO;
 
 public class Image {
     String URL;
+    Boolean choosed=false;
+
+    public Boolean getChoosed() {
+        return choosed;
+    }
+
+    public void setChoosed(Boolean choosed) {
+        this.choosed = choosed;
+    }
 
     public String getURL() {
         return URL;

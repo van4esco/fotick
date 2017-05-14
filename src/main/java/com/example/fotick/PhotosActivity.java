@@ -1,6 +1,7 @@
 package com.example.fotick;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -18,6 +19,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AdapterView;
 import android.widget.EditText;
 
 import com.example.fotick.POJO.Image;
@@ -35,6 +37,12 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 public class PhotosActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private MenuItem mSearchMenuItem;
@@ -42,6 +50,7 @@ public class PhotosActivity extends AppCompatActivity
     EditText mText;
     String mAuthToken;
     private String mQuery;
+    Context context;
 
     List<Image> mPictures;
     private String mMaxId, mMinId;
@@ -49,6 +58,8 @@ public class PhotosActivity extends AppCompatActivity
     private RecyclerView mRecyclerView;
     List<String> urlstring;
     List<String> standardurl;
+    String postURL = "http://fotick-test.azurewebsites.net/api/";
+
 
     private ProgressDialog mProgressDialog;
 
@@ -64,8 +75,13 @@ public class PhotosActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                for(int i=0;i<mPictures.size();i++){
+                    if(mPictures.get(i).getChoosed())Log.d("sender",mPictures.get(i).getURL());
+                }
+
+                    Log.d("post_example","try to post");
+                    postData();
+
             }
         });
 
@@ -84,14 +100,91 @@ public class PhotosActivity extends AppCompatActivity
 
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         GridLayoutManager manager = new GridLayoutManager(this, 3);
+
+
+
         mRecyclerView.setLayoutManager(manager);
 
         showPD();
         fetchmedia();
-        mAdapter = new ImageAdapter(mPictures);
+        mAdapter = new ImageAdapter(mPictures, new CustomItemClickListener(){
+
+            @Override
+            public void onItemClick(View v, int position) {
+                Log.d("nothing", "clicked position:" + String.valueOf(position));
+            }
+        } );
         mAdapter.notifyDataSetChanged();
+
         mRecyclerView.setAdapter(mAdapter);
 
+
+    }
+
+    private void postData()  {
+        Retrofit retrofit = new Retrofit.Builder().baseUrl(postURL).
+                addConverterFactory(GsonConverterFactory.create()).build();
+
+        PostInterface service = retrofit.create(PostInterface.class);
+
+        Log.d("post_example","before creating str");
+        String jsonPostStr="[";
+        JSONArray jArray = new JSONArray();
+        JSONArray jSale = new JSONArray();
+
+        Log.d("post_example",jsonPostStr);
+        try {
+            for(int i=0;i<mPictures.size();i++) {
+                //jsonPostStr=jsonPostStr+mPictures.get(i).getURL()+", ";
+                //Log.d("post_example",jsonPostStr);
+                jArray.put(mPictures.get(i).getURL());
+                if(mPictures.get(i).getChoosed())jSale.put(mPictures.get(i).getURL());
+            }
+            ///jsonPostStr+=mPictures.get(mPictures.size()-1).getURL()+"]";
+            Log.d("post_example",jArray.toString());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        final String result = mAuthToken;
+        Log.d("post_example", jsonPostStr);
+        service.getStringScalar(result).enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+
+                System.out.println("result is====>" + response.body());
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                System.out.println("Failuere");
+            }
+        });
+        service.getArray(jArray).enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+
+                System.out.println("result is====>" + response.body());
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                System.out.println("Failuere");
+            }
+        });
+        service.getArray(jSale).enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+
+                System.out.println("result is====>" + response.body());
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                System.out.println("Failuere");
+            }
+        });
 
     }
 
