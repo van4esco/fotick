@@ -97,6 +97,7 @@ namespace Fotick.Api.Web.Controllers
         public IActionResult GetUser([FromQuery]string url)
         {
             var image = _imagesRepository.FindByUrl(url);
+            _logger.LogInformation(image.UserId.ToString());
             return Json(_userRepository.FindById(image.UserId));
         }
     }
