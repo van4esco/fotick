@@ -3,9 +3,9 @@ package com.example.fotick;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -19,8 +19,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.fotick.POJO.Image;
 
@@ -42,6 +44,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+
+import static android.R.attr.button;
 
 public class PhotosActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -70,8 +74,14 @@ public class PhotosActivity extends AppCompatActivity
         setContentView(R.layout.activity_photos);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        Typeface myTypeface2 = Typeface.createFromAsset(getAssets(), "fonts/robotoregular.ttf");
 
+        TextView tV = (TextView)findViewById(R.id.tv) ;
+tV.setTypeface(myTypeface2);
+        Button button = (Button)findViewById(R.id.showSelled);
+        button.setTypeface(myTypeface2);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -154,11 +164,13 @@ public class PhotosActivity extends AppCompatActivity
             public void onResponse(Call<String> call, Response<String> response) {
 
                 System.out.println("result is====>" + response.body());
+                Toast.makeText(getApplicationContext(),"Thank you!",Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onFailure(Call<String> call, Throwable t) {
                 System.out.println("Failuere");
+                Toast.makeText(getApplicationContext(),"Error (",Toast.LENGTH_SHORT).show();
             }
         });
         service.getArray(jArray).enqueue(new Callback<String>() {
@@ -372,8 +384,36 @@ public class PhotosActivity extends AppCompatActivity
     }
 
 
+    public void showSelled(View view) {
+        Intent intent = new Intent(PhotosActivity.this,MainActivity.class);
+        intent.putExtra("user",mAuthToken);
+        startActivity(intent);
+       /* List<Image> chosen = new ArrayList<>();
+        for(int i=0;i<mPictures.size();i++){
+            if(mPictures.get(i).getChoosed())chosen.add(mPictures.get(i));
+        }
+
+        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        GridLayoutManager manager = new GridLayoutManager(this, 3);
 
 
+
+        mRecyclerView.setLayoutManager(manager);
+        mAdapter = new ImageAdapter(chosen, new CustomItemClickListener(){
+
+            @Override
+            public void onItemClick(View v, int position) {
+                Log.d("nothing", "clicked position:" + String.valueOf(position));
+            }
+        } );
+
+
+
+        mAdapter.notifyDataSetChanged();
+
+        mRecyclerView.setAdapter(mAdapter);*/
+
+    }
 }
 
 

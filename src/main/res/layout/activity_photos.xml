@@ -6,7 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:openDrawer="start">
+    tools:openDrawer="start"
+    android:background="@drawable/bg">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -16,10 +17,18 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="20dp"
-            android:layout_weight="5"
+            android:layout_weight="6"
             android:background="#FAFAFA">
 
         </android.support.v7.widget.RecyclerView>
+        <TextView
+            android:id="@+id/tv"
+            android:layout_marginTop="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/choose_photos_from_instagram"
+            android:textSize="20dp"/>
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView"
 
@@ -27,18 +36,27 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="2"
-        android:background="#FAFAFA">
+        >
 
     </android.support.v7.widget.RecyclerView>
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerView2"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="20dp"
-        android:layout_weight="4"
-        android:background="#FAFAFA">
+    <Button
+        android:id="@+id/showSelled"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
 
-    </android.support.v7.widget.RecyclerView>
+
+        android:text="@string/or_upload_from_gallery"
+        android:textSize="15dp"
+
+        android:onClick="showSelled"
+       android:layout_marginBottom="20dp"
+        android:layout_marginLeft="5dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+
+        android:background="@drawable/roundcorners">
+
+    </Button>
     </LinearLayout>
     <include
         layout="@layout/app_bar_photos"

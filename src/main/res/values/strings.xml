@@ -10,4 +10,11 @@
     <string name="title_activity_splash">SplashActivity</string>
     <string name="dummy_content_bottom">SIGN IN </string>
     <string name="dummy_content">Fotick</string>
+
+    <string name="btnTakePicture">Capture Image</string>
+    <string name="btnUploadToServer">Upload to Server</string>
+    <string name="or_upload_from_gallery">or upload from gallery</string>
+    <string name="choose_photos_from_instagram">choose photos from instagram</string>
+    <string name="choose_image">Choose Image</string>
+    <string name="and_then_upload_image">And then upload Image</string>
 </resources>

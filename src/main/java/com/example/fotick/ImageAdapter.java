@@ -55,6 +55,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.Holder>  {
         holder.mPhoto1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 Log.d("AAAAAAAAAAAAAAAAAAAAAA","AAAAAAAAAAAAAAAAAAAA "+currPic.getURL());
                 currPic.setChoosed(!currPic.getChoosed());
                 Log.d("AAAAAAAAAAAAAAAAAAA",String.valueOf(currPic.getChoosed()));

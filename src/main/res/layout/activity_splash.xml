@@ -14,7 +14,7 @@
 
     <TextView
         android:id="@+id/fullscreen_content"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
@@ -34,7 +34,7 @@
         android:ems="10"
         android:inputType="textPersonName"
         android:hint="Enter instagram login"
-        android:textColorHint="#ffffff"
+        android:textColorHint="#66ffffff"
         android:textColor="#ffffff"
         android:layout_marginTop="10dp"/>
 
@@ -43,11 +43,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/editText"
-        android:background="#6F7FDA"
+        android:background="@drawable/roundcorners"
         android:layout_marginTop="20dp"
         android:onClick="onClick"
         android:text="@string/dummy_content_bottom"
         android:textColor="#ffffff"
+        android:textSize="15dp"
         android:layout_alignRight="@+id/editText"
         android:layout_alignEnd="@+id/editText"
         android:layout_alignLeft="@+id/editText"
