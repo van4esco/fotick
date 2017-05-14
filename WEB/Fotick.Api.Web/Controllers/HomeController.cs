@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Fotick.Api.DAL.Repositories;
+using System.Net.Http;
+using System.IO;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -28,6 +30,12 @@ namespace Fotick.Api.Web.Controllers
                 return View(images.Where(p=>p.IsForSale).Select(p=>p.Url));
             }
             return View();
+        }
+
+        public   IActionResult Download(string url)
+        {
+            
+            return File(url, "image/jpeg");
         }
     }
 }
