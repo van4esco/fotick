@@ -29,7 +29,7 @@ namespace Fotick.Api.Web.Controllers
         }
 
         [HttpPost("{userName}")]
-        public IActionResult Load([FromRoute]string userName,[FromBody]string[] images)
+        public IActionResult Load([FromRoute]string userName,[FromBody]IEnumerable<string> images)
         {
             try
             {
@@ -93,6 +93,11 @@ namespace Fotick.Api.Web.Controllers
             var image = _imagesRepository.FindByUrl(url);
             return Json(_imagesRepository.GetImageTags(image.Id));
         }
-
+        [HttpGet("User")]
+        public IActionResult GetUser([FromQuery]string url)
+        {
+            var image = _imagesRepository.FindByUrl(url);
+            return Json(_userRepository.FindById(image.UserId));
+        }
     }
 }
