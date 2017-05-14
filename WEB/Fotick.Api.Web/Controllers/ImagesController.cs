@@ -8,6 +8,7 @@ using Fotick.Api.DAL.Entities;
 using Microsoft.Extensions.Logging;
 using Fotick.Api.BLL.Managers;
 using Fotick.Api.BLL.Contracts;
+using System.Threading.Tasks;
 
 namespace Fotick.Api.Web.Controllers
 {
@@ -49,12 +50,13 @@ namespace Fotick.Api.Web.Controllers
             }
             catch(Exception e)
             {
+                _logger.LogError(e.Message);
                 return new StatusCodeResult(500);
             }
         }
 
         [HttpPost("{userName}/sell")]
-        public IActionResult Sell(string userName, [FromBody]IEnumerable<string> images)
+        public async Task<IActionResult> SellAsync(string userName, [FromBody]IEnumerable<string> images)
         {
             var user = _userRepository.FindByUserName(userName);
             if (user == null)
@@ -62,7 +64,7 @@ namespace Fotick.Api.Web.Controllers
             foreach (var item in images)
             {
                 var image = _imagesRepository.FindByUrl(item);
-                if(image == null)
+                if (image == null)
                 {
                     image = new Image()
                     {
@@ -72,18 +74,19 @@ namespace Fotick.Api.Web.Controllers
                     };
                     _imagesRepository.Add(image);
                 }
-                else{
+                else
+                {
                     image.IsForSale = true;
                     _imagesRepository.Update(image);
                 }
-                var tags = _tagsManager.GetTags(item);
+                var tags = await _tagsManager.GetTags(item);
                 _imagesRepository.AddTags(image.Id, tags);
             }
             return Ok();
         }
 
-        [HttpGet]
-        public IActionResult GetTags(string url){
+        [HttpGet("Tags")]
+        public IActionResult GetTags([FromQuery]string url){
             var image = _imagesRepository.FindByUrl(url);
             return Json(_imagesRepository.GetImageTags(image.Id));
         }

@@ -10,6 +10,9 @@ using System.Threading.Tasks;
 using Fotick.Api.DAL.Entities;
 using Newtonsoft.Json;
 using Fotick.Api.BLL.Contracts;
+using Microsoft.Extensions.Logging;
+using System.IO;
+
 namespace Fotick.Api.BLL.Managers
 {
     public class TagsManager: ITagsManager
@@ -18,12 +21,14 @@ namespace Fotick.Api.BLL.Managers
         private readonly IImageRepository _imageRepository;
         private readonly ITagRepository _tagRepository;
         private string _accessToken;
+        private readonly ILogger<TagsManager> _logger;
         private HttpClient _client;
-        public TagsManager(IConfiguration configuration, IImageRepository imageRepository, ITagRepository tagRepository)
+        public TagsManager(IConfiguration configuration, IImageRepository imageRepository, ITagRepository tagRepository, ILogger<TagsManager> logger)
         {
             _configuration = configuration;
             _imageRepository = imageRepository;
             _tagRepository = tagRepository;
+            _logger = logger;
             InitializeClient();
         }
 
@@ -58,14 +63,14 @@ namespace Fotick.Api.BLL.Managers
             });
             var curl = _configuration["Clarifai:url"];
             var model = _configuration["Clarifai:model"];
-            curl.Replace("{0}", model);
-            var msg = await _client.PostAsync(model, new StringContent(obj, Encoding.UTF8, "application/json"));
+            curl = curl.Replace("{0}", model);
+            var msg = await _client.PostAsync(curl, new StringContent(obj, Encoding.UTF8, "application/json"));
             var json = await msg.Content.ReadAsStringAsync();
-            var result = JsonConvert.DeserializeObject<dynamic>(json).outputs[0].data.concepts;
+            var result = JsonConvert.DeserializeObject<Model>(json);
             var list = new List<Tag>();
-            foreach (var item in result)
+            foreach (dynamic item in result.outputs[0].data.concepts)
             {
-                var tag = _tagRepository.GetByText(item.name);
+                var tag = _tagRepository.GetByText(item.name as string);
                 if(tag == null){
                     tag = new Tag
                     {

@@ -46,7 +46,7 @@ namespace Fotick.Api.DAL.Repositories
             using (IDbConnection dbConnection = Connection)
             {
                 dbConnection.Open();
-                return dbConnection.Query<Tag>($"SELECT * FROM dbo.Tags as t JOIN dbo.ImageTags as i ON i.tag_id = t.id WHERE i.image_id = @id", new
+                return dbConnection.Query<Tag>($"SELECT * FROM dbo.Tags as t JOIN dbo.ImageTags as i ON i.tags_id = t.id WHERE i.image_id = @id", new
                 {
                     Id = id
                 });
@@ -81,10 +81,10 @@ namespace Fotick.Api.DAL.Repositories
                     tag = new Tag() { Text = text };
                      _tagRepository.Add(tag);
                 }
-                return  dbConnection.Execute($"INSERT INTO dbo.ImageTags (id,image_id,tag_id,added_date) VALUES(@Id,@ImageId,@TagId,@Date)",
+                return  dbConnection.Execute($"INSERT INTO dbo.ImageTags (id,image_id,tags_id,added_date) VALUES(@Id,@ImageId,@TagId,@Date)",
                         new
                         {
-                            Id = tag.Id,
+                            Id = Guid.NewGuid(),
                             Date = tag.AddedDate,
                             ImageId = id,
                             TagId = tag.Id
@@ -100,7 +100,7 @@ namespace Fotick.Api.DAL.Repositories
                     ImageId = id,
                     TagId = p.Id
                 });
-                return dbConnection.Execute($"INSERT INTO dbo.ImageTags (id,image_id,tag_id,added_date) VALUES(@Id,@ImageId,@TagId,@AddedDAte)", imgtags);
+                return dbConnection.Execute($"INSERT INTO dbo.ImageTags (id,image_id,tags_id,added_date) VALUES(@Id,@ImageId,@TagId,@AddedDAte)", imgtags);
             }
         }
 
@@ -122,6 +122,6 @@ namespace Fotick.Api.DAL.Repositories
         IEnumerable<Tag> GetImageTags(Guid id);
         int AddTag(Guid id, string text);
         Image FindByUrl(string url);
-        int AddTags(Guid id, IEnumerable<Tag> tags)
+        int AddTags(Guid id, IEnumerable<Tag> tags);
     }
 }

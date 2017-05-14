@@ -39,7 +39,7 @@ namespace Fotick.Api.DAL.Repositories
                 dbConnection.Open();
                 return dbConnection.QueryFirstOrDefault<Tag>($"SELECT * FROM {TableName} WHERE text = @Text", new
                 {
-                    Id = text
+                    Text = text
                 });
             }
         }
