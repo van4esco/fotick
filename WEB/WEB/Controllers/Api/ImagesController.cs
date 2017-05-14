@@ -123,7 +123,7 @@ namespace Fotick.Api.Web.Controllers
                 {
                     var tagsManager = new TagsManager();
                     var user = db.Users.FirstOrDefault(p => p.UserName == userName);
-                    var url = $"https://fotick-test.scm.azurewebsites.net/Content/Files/Images/{userName}/{streamProvider.FileData.Select(entry => entry.LocalFileName)}";
+                    var url = $"https://fotick-test.azurewebsites.net/Content/Files/Images/{userName}/{streamProvider.FileData.Select(entry => entry.LocalFileName)}";
                     var image = new Image()
                     {
                         Url = url,
