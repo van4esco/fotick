@@ -24,9 +24,10 @@ namespace Fotick.Api.Web.Controllers
         {
             if(!string.IsNullOrWhiteSpace(tag))
             {
-                var images = _imagesRepository.F
+                var images = _imagesRepository.SearchByTag(tag);
+                return View(images.Where(p=>p.IsForSale).Select(p=>p.Url));
             }
-                return View();
+            return View();
         }
     }
 }
